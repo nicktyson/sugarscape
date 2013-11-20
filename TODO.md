@@ -1,7 +1,7 @@
-* Agents look in each direction and choose a position to move to.
 * Populate the list of agents.
 * Agent death.
-* Fill the world non-uniformly.
+* New agent creation.
+* Fill the world in custom ways.
 * Different rules.
 * Statistics output.
 * Camera controls.
