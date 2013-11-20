@@ -30,8 +30,8 @@ namespace sugarscape {
             spritebatch.Begin();
 			for (int i = 0; i < w.xSize; i++) {
 				for (int j = 0; j < w.ySize; j++) {
-					Vector2 cellPosition = new Vector2(i * (cellTexture.Width), j * (cellTexture.Height));
-                    spritebatch.Draw(cellTexture, Vector2.Add(cameraPosition, cellPosition), Color.White);
+					Vector2 cellPosition = new Vector2(i * cellTexture.Width, j * cellTexture.Height);
+                    spritebatch.Draw(cellTexture, Vector2.Add(cameraPosition, cellPosition), Color.Multiply(Color.White, (float) w.seeCell(i, j).sugar / 15.0f));
 				}
 			}
             spritebatch.End();
@@ -39,7 +39,7 @@ namespace sugarscape {
 
 		public void drawAgent(Agent a) {
 			spritebatch.Begin();
-			spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, new Vector2(a.Posx, a.Posy)), Color.White);
+			spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, new Vector2(a.Posx * cellTexture.Width, a.Posy * cellTexture.Height)), Color.Maroon);
 			spritebatch.End();
 		}
 	}

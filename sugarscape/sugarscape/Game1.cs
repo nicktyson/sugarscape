@@ -26,6 +26,9 @@ namespace sugarscape
 
 		List<Agent> agents;
 
+		private int framesPerUpdate;
+		private int frameCount;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -35,6 +38,9 @@ namespace sugarscape
 
 			world = new World(Constants.DEFAULT_WORLD_X, Constants.DEFAULT_WORLD_Y);
 			agents = new List<Agent>();
+
+			framesPerUpdate = Constants.START_FRAMES_PER_SIM_UPDATE;
+			frameCount = 0;
         }
 
         /// <summary>
@@ -60,7 +66,8 @@ namespace sugarscape
 
 
 		private void initAgents() {
-
+			agents.Add(new Agent(1, 1, 5, 60, 1, 2, world));
+			agents.Add(new Agent(6, 4, 5, 60, 1, 2, world));
 		}
 
 
@@ -93,19 +100,33 @@ namespace sugarscape
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
+            // Check controls from UserController here
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
 
-			world.updateOneStep();
+			frameCount++;
+			if (frameCount >= framesPerUpdate) {
+				world.updateOneStep();
 
-			foreach (Agent a in agents) {
-				a.updateOneStep();
+				shuffleAgents();
+				foreach (Agent a in agents) {
+					a.updateOneStep();
+				}
+
+				frameCount = 0;
 			}
 
             base.Update(gameTime);
         }
+
+		/// <summary>
+		/// Randomizes the order of agents
+		/// </summary>
+		private void shuffleAgents() {
+
+		}
+
 
         /// <summary>
         /// This is called when the game should draw itself.
