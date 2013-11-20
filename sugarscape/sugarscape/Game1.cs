@@ -33,7 +33,7 @@ namespace sugarscape
 			content.RootDirectory = "Content\\";
 
 
-			world = new World(50, 50);
+			world = new World(Constants.DEFAULT_WORLD_X, Constants.DEFAULT_WORLD_Y);
 			agents = new List<Agent>();
         }
 
@@ -115,10 +115,10 @@ namespace sugarscape
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			View.drawWorld(world);
+			view.drawWorld(world);
 
 			foreach (Agent a in agents) {
-				View.drawAgent(a);
+				view.drawAgent(a);
 			}
 
             base.Draw(gameTime);

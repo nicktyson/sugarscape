@@ -23,14 +23,57 @@ namespace sugarscape {
 
 		}
 
-		public void updateOneStep() {
-			int[] directions = shuffleDirections();
-
-			world.seeCell(posx, posy);
+		public enum Directions
+		{
+			NORTH,
+			SOUTH,
+			EAST,
+			WEST
 		}
 
-		private int[] shuffleDirections() {
-			return (new int[] {0, 1, 2, 3});
+		public void updateOneStep() {
+			Directions[] directions = shuffleDirections();
+
+			foreach (Directions d in directions) {
+				switch (d) {
+					case Directions.NORTH:
+						break;
+					case Directions.SOUTH:
+						break;
+					case Directions.EAST:
+						break;
+					case Directions.WEST:
+						world.seeCell(posx, posy);
+						break;
+				}
+			}
+
+            sugar -= metabolism;
+			if (sugar < 0) {
+
+			}
+		}
+
+		private Directions[] shuffleDirections() {
+			return (new Directions[] {Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST});
+		}
+
+		public int Posx {
+			get {
+				return posx;
+			}
+			set {
+				posx = value;
+			}
+		}
+
+		public int Posy {
+			get {
+				return posy;
+			}
+			set {
+				posy = value;
+			}
 		}
 	}
 }
