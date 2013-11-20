@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 
 namespace sugarscape {
-	class Constants {
+	public static class Constants {
+
+		public static int WORLD_X = 10;
+		public static int WORLD_Y = 10;
 	}
 }

@@ -5,5 +5,6 @@ using System.Text;
 
 namespace sugarscape {
 	class SimController {
+
 	}
 }

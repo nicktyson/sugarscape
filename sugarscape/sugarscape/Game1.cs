@@ -17,12 +17,24 @@ namespace sugarscape
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
+		ContentManager content;
         SpriteBatch spriteBatch;
+
+		View view;
+
+		World world;
+
+		List<Agent> agents;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+			content = new ContentManager(Services);
+			content.RootDirectory = "Content\\";
+
+
+			world = new World(50, 50);
+			agents = new List<Agent>();
         }
 
         /// <summary>
@@ -33,10 +45,24 @@ namespace sugarscape
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+			view = new View(GraphicsDevice);
+
+			initWorld();
+			initAgents();
 
             base.Initialize();
         }
+
+
+		private void initWorld() {
+			world.fillCells();
+		}
+
+
+		private void initAgents() {
+
+		}
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -47,7 +73,8 @@ namespace sugarscape
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+			view.loadContent(content);
+			// TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -70,7 +97,12 @@ namespace sugarscape
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+
+			world.updateOneStep();
+
+			foreach (Agent a in agents) {
+				a.updateOneStep();
+			}
 
             base.Update(gameTime);
         }
@@ -83,7 +115,11 @@ namespace sugarscape
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+			View.drawWorld(world);
+
+			foreach (Agent a in agents) {
+				View.drawAgent(a);
+			}
 
             base.Draw(gameTime);
         }
