@@ -6,11 +6,27 @@ using System.Text;
 namespace sugarscape {
 	public static class Constants {
 
+		//these are all defaults that should be changeable by the user
+
 		public const int DEFAULT_WORLD_X = 8;
 		public const int DEFAULT_WORLD_Y = 5;
 
 		public const int START_AGENTS_COUNT = 10;
 
 		public const int START_FRAMES_PER_SIM_UPDATE = 60;
+
+		public enum Growback_Rules {
+			INSTANT,
+			STANDARD
+		}
+
+		public const Growback_Rules rule = Growback_Rules.STANDARD;
+
+		public const bool DEATH_ON = false;
+		public const bool REPRODUCTION_ON = false;
+
+		//view / application constants
+		public const float CAMERA_SPEED = 4.0f;
+		public const float ZOOM_SPEED = 0.02f;
 	}
 }

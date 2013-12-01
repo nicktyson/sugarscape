@@ -21,6 +21,7 @@ namespace sugarscape
         SpriteBatch spriteBatch;
 
 		View view;
+		UserController user;
 
 		World world;
 
@@ -52,6 +53,8 @@ namespace sugarscape
         protected override void Initialize()
         {
 			view = new View(GraphicsDevice);
+			user = new UserController();
+			user.initialize();
 
 			initWorld();
 			initAgents();
@@ -101,8 +104,7 @@ namespace sugarscape
         protected override void Update(GameTime gameTime)
         {
             // Check controls from UserController here
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+			user.update(view);
 
 
 			frameCount++;
