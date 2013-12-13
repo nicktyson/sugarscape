@@ -24,11 +24,14 @@ namespace sugarscape
 		UserController user;
 
 		World world;
-
+		
 		List<Agent> agents;
+		List<Agent> agents2;
 
 		private int framesPerUpdate;
 		private int frameCount;
+
+		Random rand = new Random();
 
         public Game1()
         {
@@ -55,6 +58,9 @@ namespace sugarscape
 			view = new View(GraphicsDevice);
 			user = new UserController();
 			user.initialize();
+
+			agents = new List<Agent>(Constants.MAX_AGENTS);
+			agents2 = new List<Agent>(Constants.MAX_AGENTS);
 
 			initWorld();
 			initAgents();
@@ -111,10 +117,13 @@ namespace sugarscape
 			if (frameCount >= framesPerUpdate) {
 				world.updateOneStep();
 
-				shuffleAgents();
 				foreach (Agent a in agents) {
 					a.updateOneStep();
+					if (a.IsAlive) {
+						agents2.Add(a);
+					}
 				}
+				shuffleAgents();
 
 				frameCount = 0;
 			}
@@ -126,7 +135,20 @@ namespace sugarscape
 		/// Randomizes the order of agents
 		/// </summary>
 		private void shuffleAgents() {
+			agents.Clear();
+			
+			//shuffle agents2
+			for (int i = agents2.Count - 1; i > 0; i--) {
+				int j = rand.Next(i + 1);
+				Agent tmp = agents2[i];
+				agents2[i] = agents2[j];
+				agents2[j] = tmp;
+			}
 
+			//swap arrays
+			List<Agent> temp = agents;
+			agents = agents2;
+			agents2 = temp;
 		}
 
 		/// <summary>

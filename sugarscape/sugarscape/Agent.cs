@@ -19,6 +19,8 @@ namespace sugarscape {
 
 		private World world;
 
+		private bool alive;
+
 		private static Random r = new Random();
 
 		public Agent(int x, int y, int sugar, int lifespan, int metabolism, int vision, World world) {
@@ -30,6 +32,7 @@ namespace sugarscape {
 			this.metabolism = metabolism;
 			sight = vision;
 			this.world = world;
+			alive = true;
 		}
 
 		public enum Directions
@@ -40,14 +43,17 @@ namespace sugarscape {
 			WEST
 		}
 
+		private static Directions[] dirs = new Directions[] { Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST };
+
 		public void updateOneStep() {
-			Directions[] directions = shuffleDirections();
+			shuffleDirections();
 
 			int newX = posx;
 			int newY = posy;
 			int destSugar = 0;
 
-			foreach (Directions d in directions) {
+			//look each direction
+			foreach (Directions d in dirs) {
 				int dx = 0;
 				int dy = 0;
 
@@ -73,8 +79,7 @@ namespace sugarscape {
 						newX = c.x;
 						newY = c.y;
 					}
-				}
-				
+				}	
 			}
 
 			sugar += destSugar;
@@ -85,8 +90,15 @@ namespace sugarscape {
 			posy = newY;
 
             sugar -= metabolism;
-			if (sugar < 0 || age > lifespan) {
-				die();
+
+			if (Constants.DEATH_AGE) {
+				if (age >= lifespan) {
+					die();
+				}
+			} else if (Constants.DEATH_STARVATION) {
+				if (sugar < 0) {
+					die();
+				}
 			}
 
 			if (sugar > start_sugar) {
@@ -95,7 +107,13 @@ namespace sugarscape {
 		}
 
 		private Directions[] shuffleDirections() {
-			return (new Directions[] {Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST});
+			for (int i = 3; i > 0; i--) {
+				int j = r.Next(i + 1);
+				Directions tmp = dirs[i];
+				dirs[i] = dirs[j];
+				dirs[j] = tmp;
+			}
+			return dirs;
 		}
 
 		private void reproduce() {
@@ -134,7 +152,7 @@ namespace sugarscape {
 		}
 
 		private void die() {
-
+			alive = false;
 		}
 
 		public bool isFertile() {
@@ -162,6 +180,12 @@ namespace sugarscape {
 			}
 			set {
 				posy = value;
+			}
+		}
+
+		public bool IsAlive {
+			get {
+				return alive;
 			}
 		}
 	}

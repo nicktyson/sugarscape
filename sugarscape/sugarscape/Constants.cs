@@ -12,6 +12,7 @@ namespace sugarscape {
 		public const int DEFAULT_WORLD_Y = 15;
 
 		public const int START_AGENTS_COUNT = 10;
+		public const int MAX_AGENTS = 20;
 
 		public const int START_FRAMES_PER_SIM_UPDATE = 60;
 
@@ -21,9 +22,10 @@ namespace sugarscape {
 			SEASONAL
 		}
 
-		public const Growback_Rules rule = Growback_Rules.STANDARD;
+		public const Growback_Rules growbackRule = Growback_Rules.STANDARD;
 
-		public const bool DEATH_ON = false;
+		public const bool DEATH_AGE = false;
+		public const bool DEATH_STARVATION = false;
 		public const bool REPRODUCTION_ON = false;
 
 		public const int MAX_AGE_MIN = 40;

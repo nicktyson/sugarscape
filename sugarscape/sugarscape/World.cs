@@ -38,6 +38,9 @@ namespace sugarscape {
 			}
 		}
 
+		/// <summary>
+		/// Initialize the status of each cell
+		/// </summary>
 		public void fillCells() {
 			for (int i = 0; i < xSize; i++) {
 				for (int j = 0; j < ySize; j++) {
@@ -51,11 +54,30 @@ namespace sugarscape {
 		}
 
 		public void updateOneStep() {
+			switch (Constants.growbackRule) {
+				case Constants.Growback_Rules.INSTANT:
+					growbackInstant();
+					break;
+				case Constants.Growback_Rules.STANDARD:
+					growbackStandard();
+					break;
+			}
+		}
+
+		private void growbackStandard() {
 			for (int i = 0; i < xSize; i++) {
 				for (int j = 0; j < ySize; j++) {
 					if (cells[i, j].sugar < cells[i, j].maxSugar) {
 						cells[i, j].sugar += 1;
 					}
+				}
+			}
+		}
+
+		private void growbackInstant() {
+			for (int i = 0; i < xSize; i++) {
+				for (int j = 0; j < ySize; j++) {
+					cells[i, j].sugar = cells[i, j].maxSugar;
 				}
 			}
 		}
