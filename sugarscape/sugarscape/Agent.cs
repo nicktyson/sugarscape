@@ -11,6 +11,8 @@ namespace sugarscape {
 		private int age;
 		private int sugar;
 
+		private readonly int start_sugar;
+
 		private int lifespan;
 		private int metabolism;
 		private int sight;
@@ -23,6 +25,7 @@ namespace sugarscape {
 			posx = x;
 			posy = y;
 			this.sugar = sugar;
+			this.start_sugar = sugar;
 			this.lifespan = lifespan;
 			this.metabolism = metabolism;
 			sight = vision;
@@ -65,7 +68,7 @@ namespace sugarscape {
 
 				for (int i = 1; i <= sight; i++) {
 					World.cell c = world.seeCell(posx + dx, posy + dy);
-					if (c.sugar > destSugar && c.hasAgent == false) {
+					if (c.sugar > destSugar && c.hasAgent() == false) {
 						destSugar = c.sugar;
 						newX = c.x;
 						newY = c.y;
@@ -77,7 +80,7 @@ namespace sugarscape {
 			sugar += destSugar;
 			age++;
 
-			world.moveAgent(posx, posy, newX, newY);
+			world.moveAgent(posx, posy, newX, newY, this);
 			posx = newX;
 			posy = newY;
 
@@ -85,16 +88,64 @@ namespace sugarscape {
 			if (sugar < 0 || age > lifespan) {
 				die();
 			}
+
+			if (sugar > start_sugar) {
+				reproduce();
+			}
 		}
 
 		private Directions[] shuffleDirections() {
 			return (new Directions[] {Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST});
 		}
 
+		private void reproduce() {
+			List<Agent> partners = new List<Agent>();
+			List<World.cell> places = new List<World.cell>();
+
+
+			for(int i = -1; i < 2; i++) {
+				for(int j = -1; j < 2; j++) {
+					if (i == 0 && j == 0) {
+						continue;
+					}
+
+					World.cell c = world.seeCell(posx + i, posy + j);
+
+					if (c.hasAgent()) {
+						if (c.a.isFertile()) {
+							partners.Add(c.a);
+						}
+					} else {
+						places.Add(c);
+					}
+				}
+			}
+			
+			Util.shuffleList(partners);
+			Util.shuffleList(places);
+
+			foreach (Agent a in partners) {
+				if (places.Count > 0) {
+					
+					int child_sugar = this.haveChild() + a.haveChild();
+					
+				}
+			}
+		}
+
 		private void die() {
 
 		}
 
+		public bool isFertile() {
+			return (sugar >= start_sugar);
+		}
+
+		public int haveChild() {
+			int endowment = sugar / 2;
+			sugar = sugar - endowment;
+			return endowment;
+		}
 
 		public int Posx {
 			get {

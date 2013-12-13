@@ -129,6 +129,14 @@ namespace sugarscape
 
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		private void createAgent(Agent a) {
+
+		}
 
         /// <summary>
         /// This is called when the game should draw itself.

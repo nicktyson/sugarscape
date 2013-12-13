@@ -114,6 +114,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="SimController.cs" />
     <Compile Include="UserController.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="View.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>

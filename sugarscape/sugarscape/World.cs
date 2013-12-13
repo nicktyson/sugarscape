@@ -21,16 +21,20 @@ namespace sugarscape {
 		public struct cell {
 			public int sugar;
 			public int maxSugar;
-			public bool hasAgent;
+			public Agent a;
 			public int x;
 			public int y;
 
 			public cell(int startingSugar, int sugarCapacity, int x, int y) {
 				sugar = startingSugar;
 				maxSugar = sugarCapacity;
-				hasAgent = false;
+				a = null;
 				this.x = x;
 				this.y = y;
+			}
+
+			public bool hasAgent() {
+				return (a != null);
 			}
 		}
 
@@ -39,7 +43,7 @@ namespace sugarscape {
 				for (int j = 0; j < ySize; j++) {
 					cells[i, j].sugar = random.Next(5);
 					cells[i, j].maxSugar = 15;
-					cells[i, j].hasAgent = false;
+					cells[i, j].a = null;
 					cells[i, j].x = i;
 					cells[i, j].y = j;
 				}
@@ -60,11 +64,11 @@ namespace sugarscape {
 			return cells[(x + xSize) % xSize, (y + ySize) % ySize];
 		}
 
-		public void moveAgent(int oldx, int oldy, int newx, int newy) {
-			cells[(oldx + xSize) % xSize, (oldy + ySize) % ySize].hasAgent = false;
+		public void moveAgent(int oldx, int oldy, int newx, int newy, Agent a) {
+			cells[(oldx + xSize) % xSize, (oldy + ySize) % ySize].a = null;
 
 			cells[(newx + xSize) % xSize, (newy + ySize) % ySize].sugar = 0;
-			cells[(newx + xSize) % xSize, (newy + ySize) % ySize].hasAgent = true;
+			cells[(newx + xSize) % xSize, (newy + ySize) % ySize].a = a;
 		}
 	}
 }
