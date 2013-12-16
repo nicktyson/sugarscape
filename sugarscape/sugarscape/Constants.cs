@@ -24,6 +24,8 @@ namespace sugarscape {
 
 		public const Growback_Rules growbackRule = Growback_Rules.STANDARD;
 
+		public const int SEASON_LENGTH = 20;
+
 		public const bool DEATH_AGE = true;
 		public const bool DEATH_STARVATION = true;
 		public const bool REPRODUCTION_ON = false;

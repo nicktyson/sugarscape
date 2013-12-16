@@ -155,8 +155,22 @@ namespace sugarscape {
 					places.RemoveAt(0);
 
 					int child_sugar = this.haveChild() + a.haveChild();
-					//TODO: use genetics from both parents
-					Agent child = new Agent(site.x, site.y, child_sugar, lifespan, metabolism, vision, world);
+					int child_vis;
+					int child_met;
+
+					if (r.Next(2) == 0) {
+						child_vis = this.vision;
+					} else {
+						child_vis = a.vision;
+					}
+
+					if (r.Next(2) == 0) {
+						child_met = this.metabolism;
+					} else {
+						child_met = a.metabolism;
+					}
+
+					Agent child = new Agent(site.x, site.y, child_sugar, lifespan, child_met, child_vis, world);
 					world.addAgent(child);
 				}
 			}
