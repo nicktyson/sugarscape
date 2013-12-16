@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 namespace sugarscape {
-	class Agent {
+	public class Agent {
 		private int posx;
 		private int posy;
 		private int age;
@@ -15,7 +15,7 @@ namespace sugarscape {
 
 		private int lifespan;
 		private int metabolism;
-		private int sight;
+		private int vision;
 
 		private World world;
 
@@ -30,7 +30,7 @@ namespace sugarscape {
 			this.start_sugar = sugar;
 			this.lifespan = lifespan;
 			this.metabolism = metabolism;
-			sight = vision;
+			this.vision = vision;
 			this.world = world;
 			alive = true;
 		}
@@ -50,7 +50,8 @@ namespace sugarscape {
 
 			int newX = posx;
 			int newY = posy;
-			int destSugar = 0;
+			int destSugar = world.seeCell(posx, posy).sugar;
+			int destDist = 0;
 
 			//look each direction
 			foreach (Directions d in dirs) {
@@ -72,10 +73,12 @@ namespace sugarscape {
 						break;
 				}
 
-				for (int i = 1; i <= sight; i++) {
-					World.cell c = world.seeCell(posx + dx, posy + dy);
-					if (c.sugar > destSugar && c.hasAgent() == false) {
+				for (int i = 1; i <= vision; i++) {
+					World.cell c = world.seeCell(posx + dx*i, posy + dy*i);
+					if ((c.sugar > destSugar && c.hasAgent() == false) ||
+							(c.sugar == destSugar && c.hasAgent() == false && i < destDist)) {
 						destSugar = c.sugar;
+						destDist = i;
 						newX = c.x;
 						newY = c.y;
 					}
@@ -91,19 +94,23 @@ namespace sugarscape {
 
             sugar -= metabolism;
 
-			if (Constants.DEATH_AGE) {
-				if (age >= lifespan) {
-					die();
-				}
-			} else if (Constants.DEATH_STARVATION) {
+			
+			
+			if (Constants.DEATH_STARVATION) {
 				if (sugar < 0) {
 					die();
 				}
 			}
 
-			if (sugar > start_sugar) {
+			if (sugar > start_sugar && alive) {
 				reproduce();
 			}
+
+			if (Constants.DEATH_AGE) {
+				if (age >= lifespan) {
+					die();
+				}
+			}			
 		}
 
 		private Directions[] shuffleDirections() {
@@ -144,9 +151,13 @@ namespace sugarscape {
 
 			foreach (Agent a in partners) {
 				if (places.Count > 0) {
-					
+					World.cell site = places[0];
+					places.RemoveAt(0);
+
 					int child_sugar = this.haveChild() + a.haveChild();
-					
+					//TODO: use genetics from both parents
+					Agent child = new Agent(site.x, site.y, child_sugar, lifespan, metabolism, vision, world);
+					world.addAgent(child);
 				}
 			}
 		}

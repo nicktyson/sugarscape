@@ -4,18 +4,21 @@ using System.Linq;
 using System.Text;
 
 namespace sugarscape {
-	class World {
+	public class World {
 
 		private cell[,] cells;
 		public int xSize;
 		public int ySize;
 
+		private Game1 gameEngine;
+
 		private Random random = new Random();
 
-		public World (int xSize, int ySize) {
+		public World (int xSize, int ySize, Game1 gameEngine) {
 			cells = new cell[xSize, ySize];
 			this.xSize = xSize;
 			this.ySize = ySize;
+			this.gameEngine = gameEngine;
 		}
 
 		public struct cell {
@@ -45,7 +48,7 @@ namespace sugarscape {
 			for (int i = 0; i < xSize; i++) {
 				for (int j = 0; j < ySize; j++) {
 					cells[i, j].sugar = random.Next(5);
-					cells[i, j].maxSugar = 15;
+					cells[i, j].maxSugar = cells[i, j].sugar;
 					cells[i, j].a = null;
 					cells[i, j].x = i;
 					cells[i, j].y = j;
@@ -91,6 +94,19 @@ namespace sugarscape {
 
 			cells[(newx + xSize) % xSize, (newy + ySize) % ySize].sugar = 0;
 			cells[(newx + xSize) % xSize, (newy + ySize) % ySize].a = a;
+		}
+
+		public void addAgent(Agent a) {
+			if(cells[a.Posx, a.Posy].a == null) {
+				cells[a.Posx, a.Posy].a = a;
+				gameEngine.addAgent(a);
+			} else {
+				
+			}
+		}
+
+		public void removeAgent(Agent a) {
+			cells[a.Posx, a.Posy].a = null;
 		}
 	}
 }

@@ -40,7 +40,7 @@ namespace sugarscape
 			content.RootDirectory = "Content\\";
 
 
-			world = new World(Constants.DEFAULT_WORLD_X, Constants.DEFAULT_WORLD_Y);
+			world = new World(Constants.DEFAULT_WORLD_X, Constants.DEFAULT_WORLD_Y, this);
 			agents = new List<Agent>();
 
 			framesPerUpdate = Constants.START_FRAMES_PER_SIM_UPDATE;
@@ -75,8 +75,8 @@ namespace sugarscape
 
 
 		private void initAgents() {
-			agents.Add(new Agent(1, 1, 5, 60, 1, 2, world));
-			agents.Add(new Agent(6, 4, 5, 60, 1, 2, world));
+			agents.Add(new Agent(1, 1, 5, 60, 2, 2, world));
+			agents.Add(new Agent(2, 2, 5, 60, 2, 2, world));
 		}
 
 
@@ -121,6 +121,8 @@ namespace sugarscape
 					a.updateOneStep();
 					if (a.IsAlive) {
 						agents2.Add(a);
+					} else {
+						world.removeAgent(a);
 					}
 				}
 				shuffleAgents();
@@ -156,8 +158,8 @@ namespace sugarscape
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		private void createAgent(Agent a) {
-
+		public void addAgent(Agent newAgent) {
+			agents2.Add(newAgent);
 		}
 
         /// <summary>
