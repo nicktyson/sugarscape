@@ -75,8 +75,8 @@ namespace sugarscape
 
 
 		private void initAgents() {
-			agents.Add(new Agent(1, 1, 5, 60, 2, 2, world));
-			agents.Add(new Agent(2, 2, 5, 60, 2, 2, world));
+			agents.Add(new Agent(1, 1, 5, 60, 2, 3, world));
+			agents.Add(new Agent(2, 2, 5, 60, 2, 3, world));
 		}
 
 

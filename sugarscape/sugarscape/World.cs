@@ -45,9 +45,33 @@ namespace sugarscape {
 		/// Initialize the status of each cell
 		/// </summary>
 		public void fillCells() {
+			switch (Constants.worldGenMode) {
+				case Constants.World_Gen_Mode.RANDOM:
+					fillRandom();
+					break;
+				case Constants.World_Gen_Mode.TWO_HILLS:
+					fillTwoHills();
+					break;
+			}
+
+		}
+
+		public void fillRandom() {
 			for (int i = 0; i < xSize; i++) {
 				for (int j = 0; j < ySize; j++) {
 					cells[i, j].sugar = random.Next(5);
+					cells[i, j].maxSugar = cells[i, j].sugar;
+					cells[i, j].a = null;
+					cells[i, j].x = i;
+					cells[i, j].y = j;
+				}
+			}
+		}
+
+		public void fillTwoHills() {
+			for (int i = 0; i < xSize; i++) {
+				for (int j = 0; j < ySize; j++) {
+					cells[i, j].sugar = Math.Abs(i - xSize / 2) / 2;
 					cells[i, j].maxSugar = cells[i, j].sugar;
 					cells[i, j].a = null;
 					cells[i, j].x = i;

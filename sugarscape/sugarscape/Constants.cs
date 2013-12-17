@@ -8,13 +8,29 @@ namespace sugarscape {
 
 		//these are all defaults that should be changeable by the user
 
-		public const int DEFAULT_WORLD_X = 18;
-		public const int DEFAULT_WORLD_Y = 15;
+		public const int DEFAULT_WORLD_X = 25;
+		public const int DEFAULT_WORLD_Y = 25;
 
 		public const int START_AGENTS_COUNT = 10;
 		public const int MAX_AGENTS = 20;
 
 		public const int START_FRAMES_PER_SIM_UPDATE = 60;
+
+		public enum World_Gen_Mode
+		{
+			RANDOM,
+			TWO_HILLS
+		}
+
+		public const World_Gen_Mode worldGenMode = World_Gen_Mode.TWO_HILLS;
+
+		public enum Agent_Gen_Mode
+		{
+			RANDOM,
+			HARDCODED
+		}
+
+		public const Agent_Gen_Mode agentGenMode = Agent_Gen_Mode.RANDOM;
 
 		public enum Growback_Rules {
 			INSTANT,
