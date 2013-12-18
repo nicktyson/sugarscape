@@ -75,6 +75,29 @@ namespace sugarscape
 
 
 		private void initAgents() {
+			switch (Constants.agentGenMode) {
+				case Constants.Agent_Gen_Mode.HARDCODED:
+					genAgentsHardcoded();
+					break;
+				case Constants.Agent_Gen_Mode.RANDOM:
+					genAgentsRandom();
+					break;
+			}
+		}
+
+		private void genAgentsRandom() {
+			for (int i = 0; i < Constants.START_AGENTS_COUNT; i++) {
+				int x = rand.Next(Constants.DEFAULT_WORLD_X);
+				int y = rand.Next(Constants.DEFAULT_WORLD_Y);
+
+				Agent a = new Agent(x, y, 5, 60, 2, 1, world);
+				if (world.addAgent(a)) {
+					agents.Add(a);
+				}
+			}
+		}
+
+		private void genAgentsHardcoded() {
 			agents.Add(new Agent(1, 1, 5, 60, 2, 3, world));
 			agents.Add(new Agent(2, 2, 5, 60, 2, 3, world));
 		}

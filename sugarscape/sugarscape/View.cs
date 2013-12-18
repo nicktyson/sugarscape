@@ -13,7 +13,7 @@ namespace sugarscape {
 		private Texture2D cellTexture;
 		private Texture2D agentTexture;
 
-        private float zoomLevel = 1.0f;
+        private float zoomLevel = 0.5f;
         private Vector2 cameraPosition = new Vector2();
 
 		public View(GraphicsDevice gd) {

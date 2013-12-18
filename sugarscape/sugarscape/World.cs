@@ -113,6 +113,10 @@ namespace sugarscape {
 			return cells[(x + xSize) % xSize, (y + ySize) % ySize];
 		}
 
+		public bool inBounds(int x, int y) {
+			return (x >= 0 && y >= 0 && x < this.xSize && y < this.ySize);
+		}
+
 		public void moveAgent(int oldx, int oldy, int newx, int newy, Agent a) {
 			cells[(oldx + xSize) % xSize, (oldy + ySize) % ySize].a = null;
 
@@ -120,12 +124,13 @@ namespace sugarscape {
 			cells[(newx + xSize) % xSize, (newy + ySize) % ySize].a = a;
 		}
 
-		public void addAgent(Agent a) {
+		public bool addAgent(Agent a) {
 			if(cells[a.Posx, a.Posy].a == null) {
 				cells[a.Posx, a.Posy].a = a;
 				gameEngine.addAgent(a);
+				return true;
 			} else {
-				
+				return false;
 			}
 		}
 

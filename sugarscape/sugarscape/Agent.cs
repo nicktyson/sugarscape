@@ -74,6 +74,10 @@ namespace sugarscape {
 				}
 
 				for (int i = 1; i <= vision; i++) {
+					if (!Constants.WORLD_LOOPS && !world.inBounds(posx + dx*i, posy + dy*i)) {
+						continue;
+					}
+
 					World.cell c = world.seeCell(posx + dx*i, posy + dy*i);
 					if ((c.sugar > destSugar && c.hasAgent() == false) ||
 							(c.sugar == destSugar && c.hasAgent() == false && i < destDist)) {
@@ -93,19 +97,20 @@ namespace sugarscape {
 			posy = newY;
 
             sugar -= metabolism;
-
 			
-			
+			//if you ran out of sugar, die
 			if (Constants.DEATH_STARVATION) {
 				if (sugar < 0) {
 					die();
 				}
 			}
 
+			//if you have enough sugar after moving, try to reproduce
 			if (sugar > start_sugar && alive) {
 				reproduce();
 			}
 
+			//if you are too old, die
 			if (Constants.DEATH_AGE) {
 				if (age >= lifespan) {
 					die();
@@ -126,11 +131,14 @@ namespace sugarscape {
 		private void reproduce() {
 			List<Agent> partners = new List<Agent>();
 			List<World.cell> places = new List<World.cell>();
-
-
+			//check adjacent cells for neighbors
 			for(int i = -1; i < 2; i++) {
 				for(int j = -1; j < 2; j++) {
 					if (i == 0 && j == 0) {
+						continue;
+					}
+
+					if (!Constants.WORLD_LOOPS && !world.inBounds(posx + i, posy + j)) {
 						continue;
 					}
 
@@ -181,7 +189,7 @@ namespace sugarscape {
 		}
 
 		public bool isFertile() {
-			return (sugar >= start_sugar);
+			return (sugar >= start_sugar && age > Constants.FERTILITY_AGE);
 		}
 
 		public int haveChild() {
