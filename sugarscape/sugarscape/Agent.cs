@@ -53,6 +53,7 @@ namespace sugarscape {
 			this.vision = vision;
 			this.world = world;
 			alive = true;
+			age = 0;
 
 			culture = new byte[Constants.CULTURAL_TAG_LENGTH];
 			for (int i = 0; i < Constants.CULTURAL_TAG_LENGTH; i++) {
@@ -65,12 +66,18 @@ namespace sugarscape {
 			posx = x;
 			posy = y;
 			this.sugar = sugar;
-			this.start_sugar = sugar;
+			//if (sugar <= Constants.INITIAL_SUGAR_MAX) {
+				this.start_sugar = sugar;
+			//} else {
+			//	this.start_sugar = Constants.INITIAL_SUGAR_MAX;
+			//}
 			this.lifespan = lifespan;
 			this.metabolism = metabolism;
 			this.vision = vision;
 			this.world = world;
 			alive = true;
+			age = 0;
+
 			this.culture = culture;
 			calculateColor();
 		}
@@ -98,7 +105,7 @@ namespace sugarscape {
 			}
 
 			//if you have enough sugar after moving, try to reproduce
-			if (sugar > start_sugar && alive) {
+			if (sugar > start_sugar && alive && Constants.REPRODUCTION_ON) {
 				reproduce();
 			}
 
@@ -311,7 +318,7 @@ namespace sugarscape {
 		}
 
 		public int haveChild() {
-			int endowment = sugar / 2;
+			int endowment = start_sugar / 2;
 			sugar = sugar - endowment;
 			return endowment;
 		}
@@ -363,6 +370,30 @@ namespace sugarscape {
 		public Colors Color {
 			get {
 				return color;
+			}
+		}
+
+		public int Metabolism {
+			get {
+				return metabolism;
+			}
+		}
+
+		public int Vision {
+			get {
+				return vision;
+			}
+		}
+
+		public int Age {
+			get {
+				return age;
+			}
+		}
+
+		public int LifeSpan {
+			get {
+				return lifespan;
 			}
 		}
 	}

@@ -82,6 +82,9 @@ namespace sugarscape
 				case Constants.Agent_Gen_Mode.RANDOM:
 					genAgentsRandom();
 					break;
+				case Constants.Agent_Gen_Mode.SQUARES:
+					genAgentsSquares();
+					break;
 			}
 		}
 
@@ -90,8 +93,13 @@ namespace sugarscape
 				int x = rand.Next(Constants.DEFAULT_WORLD_X);
 				int y = rand.Next(Constants.DEFAULT_WORLD_Y);
 
-				Agent a = new Agent(x, y, 5, 60, 2, 1, world);
-				if (world.addAgent(a)) {
+				int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
+				int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
+				int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
+				int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
+
+				Agent a = new Agent(x, y, sug, life, met, vis, world);
+				if (world.initialSpawnAgent(a)) {
 					agents.Add(a);
 				}
 			}
@@ -102,12 +110,43 @@ namespace sugarscape
 			agents.Add(new Agent(2, 2, 5, 60, 2, 3, world));
 		}
 
+		private void genAgentsSquares() {
+			for (int i = 0; i < Constants.START_AGENTS_COUNT / 2; i++) {
+				int x = rand.Next(20);
+				int y = rand.Next(20);
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
-        protected override void LoadContent()
+				int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
+				int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
+				int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
+				int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
+
+				Agent a = new Agent(x, y, sug, life, met, vis, world);
+				if (world.initialSpawnAgent(a)) {
+					agents.Add(a);
+				}
+			}
+			for (int i = 0; i < Constants.START_AGENTS_COUNT / 2; i++) {
+				int x = rand.Next(Constants.DEFAULT_WORLD_X - 20, Constants.DEFAULT_WORLD_X);
+				int y = rand.Next(Constants.DEFAULT_WORLD_Y - 20, Constants.DEFAULT_WORLD_Y);
+
+				int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
+				int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
+				int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
+				int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
+
+				Agent a = new Agent(x, y, sug, life, met, vis, world);
+				if (world.initialSpawnAgent(a)) {
+					agents.Add(a);
+				}
+			}
+
+		}
+
+		/// <summary>
+		/// LoadContent will be called once per game and is the place to load
+		/// all of your content.
+		/// </summary>
+		protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -163,14 +202,6 @@ namespace sugarscape
 			agents.Clear();
 			
 			//shuffle agents2
-
-/*			for (int i = agents2.Count - 1; i > 0; i--) {
-				int j = rand.Next(i + 1);
-				Agent tmp = agents2[i];
-				agents2[i] = agents2[j];
-				agents2[j] = tmp;
-			}*/
-
 			Util.shuffleList(agents2);
 
 			//swap arrays

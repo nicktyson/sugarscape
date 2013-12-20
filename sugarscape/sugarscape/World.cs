@@ -49,6 +49,9 @@ namespace sugarscape {
 				case Constants.World_Gen_Mode.RANDOM:
 					fillRandom();
 					break;
+				case Constants.World_Gen_Mode.TWO_RIDGES:
+					fillTwoRidges();
+					break;
 				case Constants.World_Gen_Mode.TWO_HILLS:
 					fillTwoHills();
 					break;
@@ -59,7 +62,19 @@ namespace sugarscape {
 		public void fillRandom() {
 			for (int i = 0; i < xSize; i++) {
 				for (int j = 0; j < ySize; j++) {
-					cells[i, j].sugar = random.Next(5);
+					cells[i, j].sugar = random.Next(Constants.WORLD_INITIAL_SUGAR_MIN, Constants.WORLD_INITIAL_SUGAR_MAX + 1);
+					cells[i, j].maxSugar = cells[i, j].sugar;
+					cells[i, j].a = null;
+					cells[i, j].x = i;
+					cells[i, j].y = j;
+				}
+			}
+		}
+
+		public void fillTwoRidges() {
+			for (int i = 0; i < xSize; i++) {
+				for (int j = 0; j < ySize; j++) {
+					cells[i, j].sugar = Math.Abs(i - xSize / 2) / 2;
 					cells[i, j].maxSugar = cells[i, j].sugar;
 					cells[i, j].a = null;
 					cells[i, j].x = i;
@@ -69,9 +84,36 @@ namespace sugarscape {
 		}
 
 		public void fillTwoHills() {
+			//centers at 16/16 and 34/34
+			//radii of 5-6
 			for (int i = 0; i < xSize; i++) {
 				for (int j = 0; j < ySize; j++) {
-					cells[i, j].sugar = Math.Abs(i - xSize / 2) / 2;
+					int dist;
+					int dist1;
+					int dist2;
+
+					double xdif = Math.Abs(15 - i);
+					double ydif = Math.Abs(15 - j);
+					dist1 = (int)(Math.Sqrt(xdif * xdif + ydif * ydif));
+
+					xdif = Math.Abs(35 - i);
+					ydif = Math.Abs(35 - j);
+					dist2 = (int)(Math.Sqrt(xdif * xdif + ydif * ydif));
+
+					dist = Math.Min(dist1, dist2);
+
+					if (dist < 6) {
+						cells[i, j].sugar = 4;
+					} else if (dist < 12) {
+						cells[i, j].sugar = 3;
+					} else if (dist < 18) {
+						cells[i, j].sugar = 2;
+					} else if (dist < 25) {
+						cells[i, j].sugar = 1;
+					} else {
+						cells[i, j].sugar = 0;
+					}
+					
 					cells[i, j].maxSugar = cells[i, j].sugar;
 					cells[i, j].a = null;
 					cells[i, j].x = i;
@@ -128,6 +170,15 @@ namespace sugarscape {
 			if(cells[a.Posx, a.Posy].a == null) {
 				cells[a.Posx, a.Posy].a = a;
 				gameEngine.addAgent(a);
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public bool initialSpawnAgent(Agent a) {
+			if (cells[a.Posx, a.Posy].a == null) {
+				cells[a.Posx, a.Posy].a = a;
 				return true;
 			} else {
 				return false;

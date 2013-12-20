@@ -33,7 +33,7 @@ namespace sugarscape {
 					Vector2 cellPosition = new Vector2(i * cellTexture.Width, j * cellTexture.Height);
 					cellPosition *= zoomLevel;
                     //spritebatch.Draw(cellTexture, Vector2.Add(cameraPosition, cellPosition), Color.Multiply(Color.White, (float) w.seeCell(i, j).sugar / 15.0f));
-					spritebatch.Draw(cellTexture, Vector2.Add(cameraPosition, cellPosition), null, Color.Multiply(Color.White, (float)w.seeCell(i, j).sugar / 15.0f), 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+					spritebatch.Draw(cellTexture, Vector2.Add(cameraPosition, cellPosition), null, Color.Multiply(Color.White, (float)w.seeCell(i, j).sugar / 8.0f), 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
 				}
 			}
             spritebatch.End();
@@ -43,11 +43,40 @@ namespace sugarscape {
 			spritebatch.Begin();
 			Vector2 agentPosition = new Vector2(a.Posx * cellTexture.Width, a.Posy * cellTexture.Height);
 			agentPosition *= zoomLevel;
-			//spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, new Vector2(a.Posx * cellTexture.Width, a.Posy * cellTexture.Height)), Color.Maroon);
-			if (a.Color == Agent.Colors.RED) {
-				spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Maroon, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
-			} else {
-				spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Green, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+
+			switch (Constants.viewMode) {
+				case Constants.View_Modes.NONE:
+					spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Maroon, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+					break;
+				case Constants.View_Modes.CULTURE:
+					if (Constants.CULTURE_ON) {
+						if (a.Color == Agent.Colors.RED) {
+							spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Maroon, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+						} else {
+							spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Green, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+						}
+					} else {
+						spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Maroon, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+					}
+					break;
+				case Constants.View_Modes.METABOLISM:
+					float intensity = 0.5f + 0.5f * (1.0f - (float)(a.Metabolism-1) / 3.0f);
+					Color col = Color.Multiply(Color.Red, intensity);
+					col.A = 255;
+					spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, col, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+					break;
+				case Constants.View_Modes.VISION:
+					intensity = 0.5f + 0.5f * ((float)a.Vision / 6.0f);
+					col = Color.Multiply(Color.Maroon, intensity);
+					col.A = 255;
+					spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, col, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+					break;
+				case Constants.View_Modes.AGE:
+					intensity = 0.5f + 0.5f * ((float) a.Age / (float)a.LifeSpan);
+					col = Color.Multiply(Color.Maroon, intensity);
+					col.A = 255;
+					spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, col, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+					break;
 			}
 			spritebatch.End();
 		}
