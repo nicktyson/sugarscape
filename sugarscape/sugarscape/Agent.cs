@@ -26,6 +26,23 @@ namespace sugarscape {
 
 		private static Random r = new Random();
 
+		public enum Colors
+		{
+			RED,
+			BLUE
+		}
+		private Colors color;
+
+		public enum Directions
+		{
+			NORTH,
+			SOUTH,
+			EAST,
+			WEST
+		}
+		private static Directions[] dirs = new Directions[] { Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST };
+
+
 		public Agent(int x, int y, int sugar, int lifespan, int metabolism, int vision, World world) {
 			posx = x;
 			posy = y;
@@ -36,20 +53,30 @@ namespace sugarscape {
 			this.vision = vision;
 			this.world = world;
 			alive = true;
+
 			culture = new byte[Constants.CULTURAL_TAG_LENGTH];
+			for (int i = 0; i < Constants.CULTURAL_TAG_LENGTH; i++) {
+				culture[i] = (byte) r.Next(2);
+			}
+			calculateColor();
 		}
 
-		public enum Directions
-		{
-			NORTH,
-			SOUTH,
-			EAST,
-			WEST
+		public Agent(int x, int y, int sugar, int lifespan, int metabolism, int vision, World world, byte[] culture) {
+			posx = x;
+			posy = y;
+			this.sugar = sugar;
+			this.start_sugar = sugar;
+			this.lifespan = lifespan;
+			this.metabolism = metabolism;
+			this.vision = vision;
+			this.world = world;
+			alive = true;
+			this.culture = culture;
+			calculateColor();
 		}
-
-		private static Directions[] dirs = new Directions[] { Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST };
 
 		public void updateOneStep() {
+			calculateColor();
 
 			move();
 
@@ -197,6 +224,8 @@ namespace sugarscape {
 		}
 
 		private void reproduce() {
+			Util.shuffleList(neighbors);
+
 			foreach (Agent a in neighbors) {
 				if (!a.isFertile()) {
 					continue;
@@ -228,14 +257,49 @@ namespace sugarscape {
 						child_met = a.metabolism;
 					}
 
-					Agent child = new Agent(site.x, site.y, child_sugar, lifespan, child_met, child_vis, world);
+					byte[] kidCulture = new byte[Constants.CULTURAL_TAG_LENGTH];
+					byte[] spouseCulture = a.Culture;
+					for (int i = 0; i < spouseCulture.Length; i++) {
+						if (spouseCulture[i] == culture[i]) {
+							kidCulture[i] = culture[i];
+						} else {
+							if (r.Next(2) == 0) {
+								kidCulture[i] = culture[i];
+							} else {
+								kidCulture[i] = spouseCulture[i];
+							}
+						}
+					}
+
+					Agent child = new Agent(site.x, site.y, child_sugar, lifespan, child_met, child_vis, world, kidCulture);
 					world.addAgent(child);
 				}
 			}
 		}
 
 		private void influenceNeighbors() {
+			foreach (Agent a in neighbors) {
+				int tagPos = r.Next(Constants.CULTURAL_TAG_LENGTH);
+				a.setCultureTag(tagPos, this.culture[tagPos]);
+				a.calculateColor();
+			}
+		}
 
+		public void calculateColor() {
+			int zeros = 0;
+			int ones = 0;
+			foreach (byte tag in culture) {
+				if (tag == 0) {
+					zeros++;
+				} else if (tag == 1) {
+					ones++;
+				}
+			}
+			if (zeros > ones) {
+				color = Colors.RED;
+			} else {
+				color = Colors.BLUE;
+			}
 		}
 
 		private void die() {
@@ -279,6 +343,26 @@ namespace sugarscape {
 		public List<World.cell> EmptyNeighbors {
 			get {
 				return emptyNeighbors;
+			}
+		}
+
+		public byte[] Culture {
+			get {
+				return culture;
+			}
+		}
+
+		public void setCultureTag(int index, byte val) {
+			if (index >= culture.Length) {
+				return;
+			}
+
+			culture[index] = val;
+		}
+
+		public Colors Color {
+			get {
+				return color;
 			}
 		}
 	}

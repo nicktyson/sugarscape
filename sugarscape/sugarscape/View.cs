@@ -44,7 +44,11 @@ namespace sugarscape {
 			Vector2 agentPosition = new Vector2(a.Posx * cellTexture.Width, a.Posy * cellTexture.Height);
 			agentPosition *= zoomLevel;
 			//spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, new Vector2(a.Posx * cellTexture.Width, a.Posy * cellTexture.Height)), Color.Maroon);
-			spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Maroon, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+			if (a.Color == Agent.Colors.RED) {
+				spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Maroon, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+			} else {
+				spritebatch.Draw(agentTexture, Vector2.Add(cameraPosition, agentPosition), null, Color.Green, 0.0f, new Vector2(), zoomLevel, SpriteEffects.None, 1.0f);
+			}
 			spritebatch.End();
 		}
 
