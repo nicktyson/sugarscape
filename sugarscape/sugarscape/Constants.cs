@@ -8,8 +8,8 @@ namespace sugarscape {
 
 		//these are all defaults that should be changeable by the user
 
-		public const int DEFAULT_WORLD_X = 25;
-		public const int DEFAULT_WORLD_Y = 25;
+		public const int DEFAULT_WORLD_X = 24;
+		public const int DEFAULT_WORLD_Y = 24;
 
 		public const bool WORLD_LOOPS = false;
 
@@ -55,6 +55,10 @@ namespace sugarscape {
 
 		public const int INITIAL_SUGAR_MIN = 20;
 		public const int INITIAL_SUGAR_MAX = 30;
+
+		public const bool CULTURE_ON = true;
+		//should probably be odd
+		public const int CULTURAL_TAG_LENGTH = 11;
 
 		//view / application constants
 		public const float CAMERA_SPEED = 4.0f;

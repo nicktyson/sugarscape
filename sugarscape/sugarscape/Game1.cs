@@ -163,12 +163,15 @@ namespace sugarscape
 			agents.Clear();
 			
 			//shuffle agents2
-			for (int i = agents2.Count - 1; i > 0; i--) {
+
+/*			for (int i = agents2.Count - 1; i > 0; i--) {
 				int j = rand.Next(i + 1);
 				Agent tmp = agents2[i];
 				agents2[i] = agents2[j];
 				agents2[j] = tmp;
-			}
+			}*/
+
+			Util.shuffleList(agents2);
 
 			//swap arrays
 			List<Agent> temp = agents;

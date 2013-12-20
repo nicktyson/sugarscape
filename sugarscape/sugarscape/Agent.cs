@@ -10,12 +10,15 @@ namespace sugarscape {
 		private int posy;
 		private int age;
 		private int sugar;
+		private byte[] culture;
 
 		private readonly int start_sugar;
+		private readonly int lifespan;
+		private readonly int metabolism;
+		private readonly int vision;
 
-		private int lifespan;
-		private int metabolism;
-		private int vision;
+		private List<Agent> neighbors = new List<Agent>();
+		private List<World.cell> emptyNeighbors = new List<World.cell>();
 
 		private World world;
 
@@ -33,6 +36,7 @@ namespace sugarscape {
 			this.vision = vision;
 			this.world = world;
 			alive = true;
+			culture = new byte[Constants.CULTURAL_TAG_LENGTH];
 		}
 
 		public enum Directions
@@ -46,6 +50,40 @@ namespace sugarscape {
 		private static Directions[] dirs = new Directions[] { Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST };
 
 		public void updateOneStep() {
+
+			move();
+
+			age++;
+
+			sugar -= metabolism;
+
+			updateNeighbors();
+
+			//if you ran out of sugar, die
+			if (Constants.DEATH_STARVATION) {
+				if (sugar < 0) {
+					die();
+				}
+			}
+
+			if (Constants.CULTURE_ON) {
+				influenceNeighbors();
+			}
+
+			//if you have enough sugar after moving, try to reproduce
+			if (sugar > start_sugar && alive) {
+				reproduce();
+			}
+
+			//if you are too old, die
+			if (Constants.DEATH_AGE) {
+				if (age >= lifespan) {
+					die();
+				}
+			}			
+		}
+
+		private void move() {
 			shuffleDirections();
 
 			int newX = posx;
@@ -74,11 +112,11 @@ namespace sugarscape {
 				}
 
 				for (int i = 1; i <= vision; i++) {
-					if (!Constants.WORLD_LOOPS && !world.inBounds(posx + dx*i, posy + dy*i)) {
+					if (!Constants.WORLD_LOOPS && !world.inBounds(posx + dx * i, posy + dy * i)) {
 						continue;
 					}
 
-					World.cell c = world.seeCell(posx + dx*i, posy + dy*i);
+					World.cell c = world.seeCell(posx + dx * i, posy + dy * i);
 					if ((c.sugar > destSugar && c.hasAgent() == false) ||
 							(c.sugar == destSugar && c.hasAgent() == false && i < destDist)) {
 						destSugar = c.sugar;
@@ -86,81 +124,93 @@ namespace sugarscape {
 						newX = c.x;
 						newY = c.y;
 					}
-				}	
+				}
 			}
 
 			sugar += destSugar;
-			age++;
 
 			world.moveAgent(posx, posy, newX, newY, this);
 			posx = newX;
 			posy = newY;
-
-            sugar -= metabolism;
-			
-			//if you ran out of sugar, die
-			if (Constants.DEATH_STARVATION) {
-				if (sugar < 0) {
-					die();
-				}
-			}
-
-			//if you have enough sugar after moving, try to reproduce
-			if (sugar > start_sugar && alive) {
-				reproduce();
-			}
-
-			//if you are too old, die
-			if (Constants.DEATH_AGE) {
-				if (age >= lifespan) {
-					die();
-				}
-			}			
 		}
 
-		private Directions[] shuffleDirections() {
-			for (int i = 3; i > 0; i--) {
-				int j = r.Next(i + 1);
-				Directions tmp = dirs[i];
-				dirs[i] = dirs[j];
-				dirs[j] = tmp;
+		private void shuffleDirections() {
+			Util.shuffleList(dirs);
+		}
+
+		public void updateNeighbors() {
+			neighbors.Clear();
+
+			int i = 0;
+			int j = 1;
+			checkSpot(i, j);
+			i = 0;
+			j = -1;
+			checkSpot(i, j);
+			i = 1;
+			j = 0;
+			checkSpot(i, j);
+			i = -1;
+			j = 0;
+			checkSpot(i, j);
+
+			Util.shuffleList(neighbors);
+		}
+
+		public void updateEmptyNeighbors() {
+			emptyNeighbors.Clear();
+
+			int i = 0;
+			int j = 1;
+			checkSpotEmpty(i, j);
+			i = 0;
+			j = -1;
+			checkSpotEmpty(i, j);
+			i = 1;
+			j = 0;
+			checkSpotEmpty(i, j);
+			i = -1;
+			j = 0;
+			checkSpotEmpty(i, j);
+		}
+
+		private void checkSpot(int i, int j) {
+			if (Constants.WORLD_LOOPS || world.inBounds(posx + i, posy + j)) {
+				World.cell c = world.seeCell(posx + i, posy + j);
+
+				if (c.hasAgent()) {
+					neighbors.Add(c.a);
+				} else {
+					emptyNeighbors.Add(c);
+				}
 			}
-			return dirs;
+		}
+
+		private void checkSpotEmpty(int i, int j) {
+			if (Constants.WORLD_LOOPS || world.inBounds(posx + i, posy + j)) {
+				World.cell c = world.seeCell(posx + i, posy + j);
+
+				if (!c.hasAgent()) {
+					emptyNeighbors.Add(c);
+				}
+			}
 		}
 
 		private void reproduce() {
-			List<Agent> partners = new List<Agent>();
-			List<World.cell> places = new List<World.cell>();
-			//check adjacent cells for neighbors
-			for(int i = -1; i < 2; i++) {
-				for(int j = -1; j < 2; j++) {
-					if (i == 0 && j == 0) {
-						continue;
-					}
-
-					if (!Constants.WORLD_LOOPS && !world.inBounds(posx + i, posy + j)) {
-						continue;
-					}
-
-					World.cell c = world.seeCell(posx + i, posy + j);
-
-					if (c.hasAgent()) {
-						if (c.a.isFertile()) {
-							partners.Add(c.a);
-						}
-					} else {
-						places.Add(c);
-					}
+			foreach (Agent a in neighbors) {
+				if (!a.isFertile()) {
+					continue;
 				}
-			}
-			
-			Util.shuffleList(partners);
-			Util.shuffleList(places);
 
-			foreach (Agent a in partners) {
-				if (places.Count > 0) {
-					World.cell site = places[0];
-					places.RemoveAt(0);
+				updateEmptyNeighbors();
+				List<World.cell> birthplaces = new List<World.cell>(emptyNeighbors);
+				a.updateEmptyNeighbors();
+				birthplaces.AddRange(a.EmptyNeighbors);
+				Util.shuffleList(birthplaces);
+
+				if (birthplaces.Count > 0) {
+					World.cell site = birthplaces[0];
+					//birthplaces.RemoveAt(0);
 
 					int child_sugar = this.haveChild() + a.haveChild();
 					int child_vis;
@@ -182,6 +232,10 @@ namespace sugarscape {
 					world.addAgent(child);
 				}
 			}
+		}
+
+		private void influenceNeighbors() {
+
 		}
 
 		private void die() {
@@ -219,6 +273,12 @@ namespace sugarscape {
 		public bool IsAlive {
 			get {
 				return alive;
+			}
+		}
+
+		public List<World.cell> EmptyNeighbors {
+			get {
+				return emptyNeighbors;
 			}
 		}
 	}
