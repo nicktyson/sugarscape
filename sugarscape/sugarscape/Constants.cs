@@ -14,7 +14,7 @@ namespace sugarscape {
 		//true makes the world a torus
 		public const bool WORLD_LOOPS = false;
 
-		public const int START_AGENTS_COUNT = 100;
+		public const int START_AGENTS_COUNT = 150;
 		
 		//basically never used
 		public const int MAX_AGENTS = 20;
@@ -24,7 +24,7 @@ namespace sugarscape {
 		public const int WORLD_INITIAL_SUGAR_MAX = 4;
 
 		//decrease to run faster
-		public const int START_FRAMES_PER_SIM_UPDATE = 10;
+		public const int START_FRAMES_PER_SIM_UPDATE = 1;
 
 		public enum World_Gen_Mode
 		{
@@ -50,7 +50,7 @@ namespace sugarscape {
 			SEASONAL
 		}
 
-		public const Growback_Rules growbackRule = Growback_Rules.SEASONAL;
+		public const Growback_Rules growbackRule = Growback_Rules.STANDARD;
 
 		public const int SEASON_LENGTH = 100;
 		public const int SEASONAL_GROWBACK_PERIOD = 6;
@@ -89,6 +89,6 @@ namespace sugarscape {
 			VISION,
 			AGE
 		}
-		public const View_Modes viewMode = View_Modes.NONE;
+		public const View_Modes viewMode = View_Modes.CULTURE;
 	}
 }

@@ -103,11 +103,11 @@ namespace sugarscape {
 					dist = Math.Min(dist1, dist2);
 
 					if (dist < 6) {
-						cells[i, j].sugar = 4;
-					} else if (dist < 12) {
 						cells[i, j].sugar = 3;
-					} else if (dist < 18) {
+					} else if (dist < 12) {
 						cells[i, j].sugar = 2;
+					} else if (dist < 18) {
+						cells[i, j].sugar = 1;
 					} else if (dist < 25) {
 						cells[i, j].sugar = 1;
 					} else {

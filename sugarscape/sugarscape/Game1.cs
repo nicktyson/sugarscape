@@ -34,7 +34,7 @@ namespace sugarscape
 
 		Random rand = new Random();
 
-		public static bool paused = false;
+		public static bool paused = true;
 
         public Game1()
         {
@@ -94,17 +94,21 @@ namespace sugarscape
 
 		private void genAgentsRandom() {
 			for (int i = 0; i < Constants.START_AGENTS_COUNT; i++) {
-				int x = rand.Next(Constants.DEFAULT_WORLD_X);
-				int y = rand.Next(Constants.DEFAULT_WORLD_Y);
+				bool placed = false;
+				while (!placed) {
+					int x = rand.Next(Constants.DEFAULT_WORLD_X);
+					int y = rand.Next(Constants.DEFAULT_WORLD_Y);
 
-				int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
-				int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
-				int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
-				int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
+					int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
+					int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
+					int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
+					int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
 
-				Agent a = new Agent(x, y, sug, life, met, vis, world);
-				if (world.initialSpawnAgent(a)) {
-					agents.Add(a);
+					Agent a = new Agent(x, y, sug, life, met, vis, world);
+					if (world.initialSpawnAgent(a)) {
+						agents.Add(a);
+						placed = true;
+					}
 				}
 			}
 		}
@@ -116,31 +120,39 @@ namespace sugarscape
 
 		private void genAgentsSquares() {
 			for (int i = 0; i < Constants.START_AGENTS_COUNT / 2; i++) {
-				int x = rand.Next(20);
-				int y = rand.Next(20);
+				bool placed = false;
+				while (!placed) {
+					int x = rand.Next(20);
+					int y = rand.Next(20);
 
-				int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
-				int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
-				int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
-				int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
+					int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
+					int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
+					int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
+					int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
 
-				Agent a = new Agent(x, y, sug, life, met, vis, world);
-				if (world.initialSpawnAgent(a)) {
-					agents.Add(a);
+					Agent a = new Agent(x, y, sug, life, met, vis, world);
+					if (world.initialSpawnAgent(a)) {
+						agents.Add(a);
+						placed = true;
+					}
 				}
 			}
 			for (int i = 0; i < Constants.START_AGENTS_COUNT / 2; i++) {
-				int x = rand.Next(Constants.DEFAULT_WORLD_X - 20, Constants.DEFAULT_WORLD_X);
-				int y = rand.Next(Constants.DEFAULT_WORLD_Y - 20, Constants.DEFAULT_WORLD_Y);
+				bool placed = false;
+				while (!placed) {
+					int x = rand.Next(Constants.DEFAULT_WORLD_X - 20, Constants.DEFAULT_WORLD_X);
+					int y = rand.Next(Constants.DEFAULT_WORLD_Y - 20, Constants.DEFAULT_WORLD_Y);
 
-				int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
-				int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
-				int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
-				int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
+					int met = rand.Next(Constants.MET_MIN, Constants.MET_MAX + 1);
+					int vis = rand.Next(Constants.VISION_MIN, Constants.VISION_MAX + 1);
+					int life = rand.Next(Constants.MAX_AGE_MIN, Constants.MAX_AGE_MAX + 1);
+					int sug = rand.Next(Constants.INITIAL_SUGAR_MIN, Constants.INITIAL_SUGAR_MAX + 1);
 
-				Agent a = new Agent(x, y, sug, life, met, vis, world);
-				if (world.initialSpawnAgent(a)) {
-					agents.Add(a);
+					Agent a = new Agent(x, y, sug, life, met, vis, world);
+					if (world.initialSpawnAgent(a)) {
+						agents.Add(a);
+						placed = true;
+					}
 				}
 			}
 
