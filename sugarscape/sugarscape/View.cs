@@ -115,10 +115,10 @@ namespace sugarscape {
 		public void zoomCamera(Zoom_Directions dir) {
 			switch (dir) {
 				case Zoom_Directions.IN:
-					zoomLevel += Constants.ZOOM_SPEED;
+					zoomLevel += (Constants.ZOOM_SPEED * zoomLevel);
 					break;
 				case Zoom_Directions.OUT:
-					zoomLevel -= Constants.ZOOM_SPEED;
+					zoomLevel -= (Constants.ZOOM_SPEED * zoomLevel);
 					break;
 			}
 		}

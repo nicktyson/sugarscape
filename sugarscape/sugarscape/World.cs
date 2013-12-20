@@ -130,6 +130,9 @@ namespace sugarscape {
 				case Constants.Growback_Rules.STANDARD:
 					growbackStandard();
 					break;
+				case Constants.Growback_Rules.SEASONAL:
+					growbackSeasonal();
+					break;
 			}
 		}
 
@@ -147,6 +150,38 @@ namespace sugarscape {
 			for (int i = 0; i < xSize; i++) {
 				for (int j = 0; j < ySize; j++) {
 					cells[i, j].sugar = cells[i, j].maxSugar;
+				}
+			}
+		}
+
+		private void growbackSeasonal() {
+			for (int i = 0; i < xSize; i++) {
+				for (int j = 0; j < ySize; j++) {
+					if (Math.Floor((double)gameEngine.totalFrames / (double)Constants.SEASON_LENGTH) % 2 == 0) {
+						if (j > Constants.DEFAULT_WORLD_Y / 2) {
+							if (cells[i, j].sugar < cells[i, j].maxSugar) {
+								cells[i, j].sugar += 1;
+							}
+						} else if (gameEngine.totalFrames % Constants.SEASONAL_GROWBACK_PERIOD == 0) {
+							if (cells[i, j].sugar < cells[i, j].maxSugar) {
+								cells[i, j].sugar += 1;
+							}							
+						}
+					} else {
+						if (j > Constants.DEFAULT_WORLD_Y / 2) {
+							if (gameEngine.totalFrames % Constants.SEASONAL_GROWBACK_PERIOD == 0) {
+								if (cells[i, j].sugar < cells[i, j].maxSugar) {
+									cells[i, j].sugar += 1;
+								}
+							}
+						} else {
+							if (cells[i, j].sugar < cells[i, j].maxSugar) {
+								cells[i, j].sugar += 1;
+							}
+						}
+					}
+
+					
 				}
 			}
 		}

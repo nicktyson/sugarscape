@@ -30,8 +30,11 @@ namespace sugarscape
 
 		private int framesPerUpdate;
 		private int frameCount;
+		public int totalFrames;
 
 		Random rand = new Random();
+
+		public static bool paused = false;
 
         public Game1()
         {
@@ -45,6 +48,7 @@ namespace sugarscape
 
 			framesPerUpdate = Constants.START_FRAMES_PER_SIM_UPDATE;
 			frameCount = 0;
+			totalFrames = 0;
         }
 
         /// <summary>
@@ -174,24 +178,30 @@ namespace sugarscape
             // Check controls from UserController here
 			user.update(view);
 
+			if (!paused) {
 
-			frameCount++;
-			if (frameCount >= framesPerUpdate) {
-				world.updateOneStep();
-
-				foreach (Agent a in agents) {
-					a.updateOneStep();
-					if (a.IsAlive) {
-						agents2.Add(a);
-					} else {
-						world.removeAgent(a);
-					}
+				if (totalFrames % 10 == 0) {
+					System.Console.WriteLine(agents.Count);
 				}
-				shuffleAgents();
 
-				frameCount = 0;
+				frameCount++;
+				totalFrames++;
+				if (frameCount >= framesPerUpdate) {
+					world.updateOneStep();
+
+					foreach (Agent a in agents) {
+						a.updateOneStep();
+						if (a.IsAlive) {
+							agents2.Add(a);
+						} else {
+							world.removeAgent(a);
+						}
+					}
+					shuffleAgents();
+
+					frameCount = 0;
+				}
 			}
-
             base.Update(gameTime);
         }
 

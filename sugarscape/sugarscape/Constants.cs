@@ -15,14 +15,16 @@ namespace sugarscape {
 		public const bool WORLD_LOOPS = false;
 
 		public const int START_AGENTS_COUNT = 100;
+		
+		//basically never used
 		public const int MAX_AGENTS = 20;
 
-		//these aren't used really
+		//only some generation modes use these
 		public const int WORLD_INITIAL_SUGAR_MIN = 0;
 		public const int WORLD_INITIAL_SUGAR_MAX = 4;
 
 		//decrease to run faster
-		public const int START_FRAMES_PER_SIM_UPDATE = 2;
+		public const int START_FRAMES_PER_SIM_UPDATE = 10;
 
 		public enum World_Gen_Mode
 		{
@@ -40,7 +42,7 @@ namespace sugarscape {
 			SQUARES
 		}
 
-		public const Agent_Gen_Mode agentGenMode = Agent_Gen_Mode.SQUARES;
+		public const Agent_Gen_Mode agentGenMode = Agent_Gen_Mode.RANDOM;
 
 		public enum Growback_Rules {
 			INSTANT,
@@ -48,9 +50,10 @@ namespace sugarscape {
 			SEASONAL
 		}
 
-		public const Growback_Rules growbackRule = Growback_Rules.STANDARD;
+		public const Growback_Rules growbackRule = Growback_Rules.SEASONAL;
 
-		public const int SEASON_LENGTH = 40;
+		public const int SEASON_LENGTH = 100;
+		public const int SEASONAL_GROWBACK_PERIOD = 6;
 
 		public const bool DEATH_AGE = true;
 		public const bool DEATH_STARVATION = true;
@@ -86,6 +89,6 @@ namespace sugarscape {
 			VISION,
 			AGE
 		}
-		public const View_Modes viewMode = View_Modes.CULTURE;
+		public const View_Modes viewMode = View_Modes.NONE;
 	}
 }

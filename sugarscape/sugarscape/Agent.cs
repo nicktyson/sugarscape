@@ -105,7 +105,7 @@ namespace sugarscape {
 			}
 
 			//if you have enough sugar after moving, try to reproduce
-			if (sugar > start_sugar && alive && Constants.REPRODUCTION_ON) {
+			if (isFertile() && alive && Constants.REPRODUCTION_ON) {
 				reproduce();
 			}
 

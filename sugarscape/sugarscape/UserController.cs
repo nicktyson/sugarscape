@@ -40,6 +40,11 @@ namespace sugarscape {
 			if (newKS.IsKeyDown(Keys.E)) {
 				v.zoomCamera(View.Zoom_Directions.OUT);
 			}
+
+			//pausing
+			if (newKS.IsKeyDown(Keys.Space) && !oldKS.IsKeyDown(Keys.Space)) {
+				Game1.paused = !Game1.paused;
+			}
 		}
 	}
 }
